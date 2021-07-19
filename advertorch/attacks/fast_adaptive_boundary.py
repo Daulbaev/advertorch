@@ -11,7 +11,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import torch
-from torch.autograd.gradcheck import zero_gradients
 import time
 
 try:
@@ -82,7 +81,7 @@ class FABAttack(Attack, LabelMixin):
         g2 = torch.zeros([y.shape[-1], *imgs.size()]).to(self.device)
         grad_mask = torch.zeros_like(y)
         for counter in range(y.shape[-1]):
-            zero_gradients(im)
+            im.grad.zero_()
             grad_mask[:, counter] = 1.0
             y.backward(grad_mask, retain_graph=True)
             grad_mask[:, counter] = 0.0
